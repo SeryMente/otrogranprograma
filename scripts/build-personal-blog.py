@@ -28,7 +28,7 @@ def validate(d):
 def build():
     entries=[]; seen=set()
     for p in sorted((BLOG/'entries').glob('*.json')):
-        d=json.loads(p.read_text()); validate(d)
+        d=json.loads(p.read_text(encoding='utf-8')); validate(d)
         assert p.stem==d['slug'], 'Nombre de archivo distinto del slug'
         assert d['slug'] not in seen, 'Slug duplicado'
         seen.add(d['slug']); entries.append(d)
@@ -44,13 +44,13 @@ def build():
         origin='Khora · selección revisada por el autor' if d.get('source',{}).get('kind')=='khora' else 'Escritura del autor'
         body=f'<a class="back" href="../../">← Todas las entradas</a><article class="reading"><p class="eyebrow">BITÁCORA PERSONAL</p><h1>{e(d["title"])}</h1><p class="meta">Víctor Hugo Torres · <time datetime="{e(d["date"],quote=True)}">{date}</time> · {minutes} min de lectura</p><div class="prose">{paras}</div><details><summary>Procedencia y archivo</summary><p>{origin}. La huella identifica este texto; no certifica por sí sola los hechos narrados.</p><p class="hash">SHA-256 del texto publicado: {digest}</p><p><a href="https://github.com/SeryMente/otrogranprograma/commits/main/blog/entries/{e(d["slug"])}.json">Historial de esta entrada</a> · <a download href="../../entries/{e(d["slug"])}.json">Original portable</a></p></details></article>'
         out=BLOG/'entradas'/d['slug']; out.mkdir(parents=True,exist_ok=True)
-        (out/'index.html').write_text(shell(d['title'],body,'../../',summary,BASE+'entradas/'+d['slug']+'/'))
+        (out/'index.html').write_text(shell(d['title'],body,'../../',summary,BASE+'entradas/'+d['slug']+'/'), encoding='utf-8')
     empty='<section class="empty"><h2>El archivo comienza aquí.</h2><p>Aún no hay entradas publicadas. Cada entrada aparecerá aquí después de que su autor la revise y confirme su publicación.</p><a class="button" href="escribir/">Preparar la primera entrada</a></section>'
     intro='<section class="intro"><p class="eyebrow">VIDA · TRABAJO · PROYECTOS</p><h1>Bitácora personal.</h1><p class="dek">Un espacio de Víctor Hugo Torres para dejar constancia de su día a día, con voz propia y un archivo bajo su control.</p></section>'
     search='<div class="archive-bar"><h2>Entradas</h2><label>Buscar <input id="buscar" type="search" placeholder="Buscar en el archivo" autocomplete="off"></label></div><p id="sin-resultados" hidden>No hay entradas que coincidan.</p>' if entries else ''
     script='<script src="archive.js" defer></script>' if entries else ''
-    (BLOG/'index.html').write_text(shell('Bitácora personal',intro+search+(''.join(cards) or empty)+script,canonical=BASE))
-    (BLOG/'archivo.json').write_text(json.dumps({'schema':1,'author':'Víctor Hugo Torres','entries':entries},ensure_ascii=False,indent=2)+'\n')
+    (BLOG/'index.html').write_text(shell('Bitácora personal',intro+search+(''.join(cards) or empty)+script,canonical=BASE), encoding='utf-8')
+    (BLOG/'archivo.json').write_text(json.dumps({'schema':1,'author':'Víctor Hugo Torres','entries':entries},ensure_ascii=False,indent=2)+'\n', encoding='utf-8')
     rss=ET.Element('rss',version='2.0'); ch=ET.SubElement(rss,'channel')
     for k,v in [('title','Bitácora · Víctor Hugo Torres'),('link',BASE),('description','Vida, trabajo y proyectos. Archivo personal.')]: ET.SubElement(ch,k).text=v
     from email.utils import format_datetime
