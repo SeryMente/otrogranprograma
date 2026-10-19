@@ -24,6 +24,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Construir bitácora personal
+        run: python scripts/build-personal-blog.py
+      - name: Verificar contrato de bitácora
+        run: python scripts/test-personal-blog.py
       - name: Configurar Pages
         uses: actions/configure-pages@v5
       - name: Subir artefacto
