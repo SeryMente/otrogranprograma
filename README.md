@@ -59,3 +59,7 @@ docs/*                     decisiones tecnicas y de diseno
 `instrument.css` y el comportamiento base de `glosa.js` (barra de progreso, reveal, navspy, fecha, volver-arriba) NO se modifican salvo una linea del selector de Glosa para incluir los nodos de la linea de tiempo. Todo lo nuevo es aditivo.
 
 Ver `docs/ARQUITECTURA.md` para el detalle completo.
+
+## Organización de frentes y recursos
+
+En el árbol inspeccionado no se detectó un OCP bajo `frentes/` ni `docs/frentes/`. `docs/`, `blog/`, código y activos del proyecto permanecen en sus ubicaciones actuales y no se reclasifican como frentes solo por tener directorios propios. No se crea un OCP vacío; si un frente necesita estado, responsable e historial independientes, debe registrarse explícitamente sin trasladar los activos existentes por uniformidad.
